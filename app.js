@@ -143,7 +143,7 @@ function render() {
   $("#view").innerHTML = `
     <h1 class="title">Receipts</h1>
     <p class="sub">${n ? `${n} saved` : "Snap a receipt to keep it"}</p>
-    ${!n && !state.pending ? `<div class="empty"><b>No receipts yet</b>Tap Add receipt to take a photo.</div>` : ""}
+    ${!n && !state.pending ? `<div class="empty"><b>No receipts yet</b>Tap Add receipts to get started.</div>` : ""}
     <div class="grid">${`<div class="tile pending"></div>`.repeat(state.pending)}${state.receipts.map(tile).join("")}</div>`;
 }
 
@@ -235,9 +235,15 @@ async function start() {
 
 function bindEvents() {
   installButtonHaptics();
-  $("#files").onchange = (e) => { const files = [...e.target.files]; e.target.value = ""; if (files.length) addFiles(files); };
+  const menu = (open) => { $("#menu").hidden = !open; $("#backdrop").hidden = !open; };
+  $("#add").onclick = () => menu(true);
+  $("#backdrop").onclick = () => menu(false);
+  for (const input of document.querySelectorAll("input[type=file]")) {
+    input.onclick = () => menu(false);
+    input.onchange = () => { const files = [...input.files]; input.value = ""; if (files.length) addFiles(files); };
+  }
   $("#view").onclick = (e) => { const t = e.target.closest(".tile:not(.pending)"); if (t) openReceipt(t.dataset.id); };
-  addEventListener("keydown", (e) => { if (e.key === "Escape") closeViewer(); });
+  addEventListener("keydown", (e) => { if (e.key === "Escape") { closeViewer(); menu(false); } });
   // signed links last an hour; coming back to the app later gets fresh ones
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible" && state.user && Date.now() - state.signedAt > (SIGN_FOR - 300) * 1000) load().then(render).catch(() => {});

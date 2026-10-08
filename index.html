@@ -17,16 +17,25 @@
 <body>
   <main id="main"><div id="view"></div></main>
   <nav class="bar">
-    <label class="add" for="files">
+    <button class="add" id="add">
       <svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zM9 2 7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
-      Add receipt
-    </label>
+      Add receipts
+    </button>
   </nav>
 
   <div class="toast" id="toast" hidden></div>
   <section class="viewer" id="viewer" hidden></section>
   <section class="login" id="login" hidden></section>
-  <input type="file" id="files" accept="image/*,application/pdf" multiple hidden>
+  <div class="backdrop" id="backdrop" hidden></div>
+  <section class="menu" id="menu" hidden>
+    <label for="photos"><svg viewBox="0 0 24 24"><path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4 2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg>Choose photos<small>Select as many as you like</small></label>
+    <label for="camera"><svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zM9 2 7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>Take photo<small>Opens the camera</small></label>
+    <label for="files"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>Choose files<small>PDFs and other documents</small></label>
+  </section>
+  <!-- One input per source: image-only + multiple gets Android's photo picker (tap to multi-select); capture opens the camera -->
+  <input type="file" id="photos" accept="image/*" multiple hidden>
+  <input type="file" id="camera" accept="image/*" capture="environment" hidden>
+  <input type="file" id="files" accept="application/pdf,image/*" multiple hidden>
 
   <script type="module" src="app.js"></script>
 </body>

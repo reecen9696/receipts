@@ -1,6 +1,6 @@
 // Minimal service worker: makes the app installable and keeps the shell available offline.
 // Network first, so a new deploy shows up on the next load.
-const CACHE = "receipts-v2";
+const CACHE = "receipts-v3";
 const SHELL = ["./", "index.html", "styles.css", "app.js", "haptics.js", "config.js", "icon.svg", "manifest.webmanifest"];
 
 self.addEventListener("install", (e) => {

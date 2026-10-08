@@ -59,6 +59,7 @@ main { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain
   display: flex; align-items: center; justify-content: center; gap: 10px;
   background: var(--text); color: var(--bg); font-size: 17px; font-weight: 700; user-select: none; -webkit-user-select: none;
 }
+.add { border: 0; font-family: inherit; }
 .add:active { transform: scale(.98); }
 
 /* ---------- toast ---------- */
@@ -68,6 +69,21 @@ main { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain
   background: var(--glass); color: #fff; font-size: 14.5px; font-weight: 500; text-align: center;
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); animation: fade .18s;
 }
+
+/* ---------- add menu ---------- */
+.backdrop { position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.4); animation: fade .18s; }
+.menu {
+  position: fixed; z-index: 50; left: 0; right: 0; bottom: 0; padding: 10px 12px calc(14px + var(--sab));
+  background: var(--bg); border-radius: 22px 22px 0 0; animation: up .25s cubic-bezier(.2,.8,.2,1);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.menu label {
+  display: grid; grid-template-columns: 44px 1fr; grid-template-rows: auto auto; column-gap: 12px; align-items: center;
+  padding: 12px; border-radius: 16px; cursor: pointer; font-size: 17px; font-weight: 600; user-select: none; -webkit-user-select: none;
+}
+.menu label:active { background: var(--fill); }
+.menu svg { grid-row: span 2; width: 44px; height: 44px; padding: 10px; border-radius: 12px; background: var(--fill); }
+.menu small { color: var(--muted); font-size: 13.5px; font-weight: 400; }
 
 /* ---------- viewer ---------- */
 .viewer { position: fixed; inset: 0; z-index: 60; background: #000; color: #fff; display: flex; flex-direction: column; animation: fade .18s; }
@@ -105,5 +121,6 @@ main { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain
   .tile { border-radius: 12px; }
   .tile img { transition: opacity .3s, transform .35s cubic-bezier(.2,.8,.2,1); }
   .tile:hover img.loaded { transform: scale(1.035); }
+  .menu { left: 50%; right: auto; bottom: 100px; width: 360px; transform: translateX(-50%); border-radius: 22px; animation: fade .18s; padding-bottom: 10px; box-shadow: 0 12px 40px rgba(0,0,0,.18); }
   .bar { left: 50%; right: auto; bottom: 24px; width: 360px; transform: translateX(-50%); padding: 7px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--text) 9%, transparent); box-shadow: 0 12px 40px rgba(0,0,0,.14); }
 }
