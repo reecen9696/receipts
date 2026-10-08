@@ -1,5 +1,6 @@
 import { config } from "./config.js";
 import { haptic, installButtonHaptics } from "./haptics.js";
+import { EXPENSES } from "./expenses.js";
 
 /* ---------------- helpers ---------------- */
 
@@ -30,7 +31,7 @@ const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/su
 const sb = createClient(config.supabaseUrl, config.supabaseAnonKey);
 const check = ({ data, error }) => { if (error) throw new Error(error.message); return data; };
 
-const state = { user: null, receipts: [], claims: [], thumbs: new Map(), signedAt: 0, pending: 0, tab: location.hash === "#claims" ? "claims" : "receipts" };
+const state = { user: null, receipts: [], claims: [], thumbs: new Map(), signedAt: 0, pending: 0, tab: ["claims", "expenses"].find((t) => location.hash === `#${t}`) || "receipts" };
 
 async function unlock(pin) {
   const { data, error } = await sb.auth.signInWithPassword({ email: "owner@house-moodboard.app", password: `house-moodboard-${pin}` });
@@ -144,11 +145,22 @@ function tile(r) {
 function render() {
   const claims = state.tab === "claims";
   $("#add").hidden = claims; $("#line").hidden = !claims;
-  const tabs = `<div class="tabs" role="tablist">
-    <button role="tab" data-tab="receipts" aria-selected="${!claims}">Receipts</button>
-    <button role="tab" data-tab="claims" aria-selected="${claims}">To claim</button>
-  </div>`;
-  $("#view").innerHTML = `<h1 class="title">${claims ? "To claim" : "Receipts"}</h1>${tabs}${claims ? claimsView() : receiptsView()}`;
+  const tab = TABS.find((t) => t.id === state.tab);
+  const tabs = `<div class="tabs" role="tablist">${TABS.map((t) => `<button role="tab" data-tab="${t.id}" aria-selected="${t === tab}">${t.label}</button>`).join("")}</div>`;
+  $("#view").innerHTML = `<h1 class="title">${tab.label}</h1>${tabs}${tab.view()}`;
+}
+
+/* ---------------- expenses: quick reference of what can be claimed ---------------- */
+
+function expensesView() {
+  return EXPENSES.map((g) => `
+    <h2 class="group">${esc(g.group)}</h2>
+    <div class="acc">${g.sections.map((sec) => `
+      <details>
+        <summary><span>${esc(sec.title)}</span><small>${sec.items.length}</small></summary>
+        <ul>${sec.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>
+      </details>`).join("")}
+    </div>`).join("");
 }
 
 function receiptsView() {
@@ -191,6 +203,12 @@ async function deleteClaim(btn) {
   try { check(await sb.from("claims").delete().eq("id", c.id)); }
   catch (e) { state.claims.push(c); state.claims.sort((a, b) => a.created_at.localeCompare(b.created_at)); render(); toast(`Couldn't delete: ${e.message}`); }
 }
+
+const TABS = [
+  { id: "receipts", label: "Receipts", view: receiptsView },
+  { id: "claims", label: "To claim", view: claimsView },
+  { id: "expenses", label: "Expenses", view: expensesView },
+];
 
 /* ---------------- viewer ---------------- */
 
@@ -289,7 +307,7 @@ function bindEvents() {
   }
   $("#view").onclick = (e) => {
     const tab = e.target.closest("[data-tab]");
-    if (tab) { state.tab = tab.dataset.tab; history.replaceState(null, "", state.tab === "claims" ? "#claims" : location.pathname); render(); return; }
+    if (tab) { state.tab = tab.dataset.tab; history.replaceState(null, "", state.tab === "receipts" ? location.pathname : `#${state.tab}`); render(); return; }
     const del = e.target.closest("[data-act=del]");
     if (del) return deleteClaim(del);
     const t = e.target.closest(".tile:not(.pending)"); if (t) openReceipt(t.dataset.id);

@@ -31,8 +31,28 @@ main { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain
 
 /* Receipts | To claim */
 .tabs { display: flex; gap: 4px; margin: 6px 18px 10px; padding: 4px; border-radius: 999px; background: var(--fill); width: fit-content; }
-.tabs button { height: 36px; padding: 0 18px; border-radius: 999px; font-size: 14.5px; font-weight: 600; color: var(--muted); }
+.tabs button { height: 36px; padding: 0 16px; border-radius: 999px; font-size: 14.5px; font-weight: 600; color: var(--muted); }
 .tabs [aria-selected=true] { background: var(--bg); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+
+/* expenses: one drop-down per category */
+.group { margin: 22px 18px 8px; font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.acc { margin: 0 12px; border-radius: 16px; background: var(--fill); overflow: hidden; }
+.acc details + details { border-top: 1px solid color-mix(in srgb, var(--text) 8%, transparent); }
+.acc summary {
+  list-style: none; display: flex; align-items: center; gap: 10px; min-height: 54px; padding: 0 16px; cursor: pointer;
+  font-size: 16.5px; font-weight: 600; user-select: none; -webkit-user-select: none;
+}
+.acc summary::-webkit-details-marker { display: none; }
+.acc summary span { flex: 1; }
+.acc summary small { color: var(--muted); font-size: 14px; font-weight: 500; }
+.acc summary::after {
+  content: ""; width: 9px; height: 9px; margin: 0 2px 4px 4px; flex: none;
+  border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .2s;
+}
+.acc details[open] summary::after { transform: rotate(-135deg); margin-bottom: -4px; }
+.acc ul { margin: 0; padding: 0 16px 12px 34px; }
+.acc li { padding: 6px 0; font-size: 15.5px; line-height: 1.35; }
+.acc li::marker { color: var(--muted); }
 
 /* to claim list */
 .claims { list-style: none; margin: 0; padding: 0 8px; }
