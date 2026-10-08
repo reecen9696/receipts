@@ -29,31 +29,19 @@ main { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain
 .title { margin: 0; padding: calc(18px + var(--sat)) 18px 2px; font-size: 30px; font-weight: 800; letter-spacing: -.03em; }
 .sub { margin: 0 18px 8px; color: var(--muted); font-size: 15px; }
 
-/* financial-year group */
-.fy { display: flex; align-items: baseline; justify-content: space-between; margin: 22px 18px 10px; }
-.fy h2 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-.fy span { font-size: 13px; font-weight: 600; color: var(--muted); }
-
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; padding: 0 12px; }
-.card { display: flex; flex-direction: column; gap: 6px; text-align: left; min-width: 0; }
-.card .pic {
-  position: relative; aspect-ratio: 3 / 4; border-radius: 12px; overflow: hidden; background: var(--fill);
-  display: grid; place-items: center; color: var(--muted);
-}
-.card .pic img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .3s; }
-.card .pic img.loaded { opacity: 1; }
-.card .pic svg { width: 40px; height: 40px; }
-.card .pic .kind { position: absolute; left: 8px; bottom: 8px; padding: 2px 8px; border-radius: 999px; background: var(--glass); color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .04em; }
-.card.pending .pic::after {
+/* photo grid, like the Photos app: square tiles, newest first */
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 10px; }
+.tile { position: relative; aspect-ratio: 1; overflow: hidden; background: var(--fill); display: grid; place-items: center; color: var(--muted); }
+.tile img { width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0; transition: opacity .3s; }
+.tile img.loaded { opacity: 1; }
+.tile svg { width: 36px; height: 36px; }
+.tile .kind { position: absolute; left: 6px; bottom: 6px; padding: 2px 7px; border-radius: 999px; background: var(--glass); color: #fff; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; }
+.tile.pending::after {
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,.35) 50%, transparent 65%);
   background-size: 250% 100%; animation: shimmer 1.4s infinite linear;
 }
 @keyframes shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
-.card .meta { padding: 0 2px; min-width: 0; line-height: 1.25; }
-.card b, .card small { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card b { font-size: 14.5px; font-weight: 600; }
-.card small { font-size: 13px; color: var(--muted); }
 
 .empty { min-height: 60dvh; display: grid; place-content: center; text-align: center; padding: 24px; color: var(--muted); }
 .empty b { display: block; color: var(--text); font-size: 22px; font-weight: 700; letter-spacing: -.02em; margin-bottom: 6px; }
@@ -81,35 +69,18 @@ main { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); animation: fade .18s;
 }
 
-/* ---------- receipt sheet ---------- */
-.backdrop { position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.4); animation: fade .18s; }
-.sheet {
-  position: fixed; z-index: 50; left: 0; right: 0; bottom: 0; max-height: calc(100dvh - 40px - var(--sat));
-  overflow-y: auto; overscroll-behavior: contain; padding: 8px 18px calc(18px + var(--sab));
-  background: var(--bg); border-radius: 22px 22px 0 0; animation: up .25s cubic-bezier(.2,.8,.2,1);
-}
-.sheet .grab { width: 38px; height: 5px; border-radius: 3px; background: color-mix(in srgb, var(--text) 18%, transparent); margin: 0 auto 10px; }
-.sheet .head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
-.sheet .head h3 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -.02em; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.round { flex: none; width: 40px; height: 40px; border-radius: 999px; display: grid; place-items: center; background: var(--fill); }
+/* ---------- viewer ---------- */
+.viewer { position: fixed; inset: 0; z-index: 60; background: #000; color: #fff; display: flex; flex-direction: column; animation: fade .18s; }
+.viewer .top { display: flex; align-items: center; justify-content: space-between; padding: calc(10px + var(--sat)) 12px 10px; font-size: 15px; font-weight: 600; }
+.viewer .stage { flex: 1; min-height: 0; display: grid; place-items: center; padding: 0 8px; }
+.viewer .stage img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.viewer .stage svg { width: 64px; height: 64px; opacity: .5; }
+.round { flex: none; width: 44px; height: 44px; border-radius: 999px; display: grid; place-items: center; background: rgba(255,255,255,.14); color: #fff; font-weight: 700; font-size: 14px; }
 .round svg { width: 22px; height: 22px; }
-.preview { display: block; width: 100%; border-radius: 14px; overflow: hidden; background: var(--fill); }
-.preview img { width: 100%; max-height: 55dvh; object-fit: contain; background: var(--fill); }
-.preview.doc { display: flex; align-items: center; gap: 12px; padding: 14px; color: inherit; text-decoration: none; font-weight: 600; }
-.preview.doc img { width: 64px; height: 84px; object-fit: cover; border-radius: 6px; flex: none; }
-.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
-.fields label { display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
-.fields .wide { grid-column: 1 / -1; }
-.fields input, .fields textarea {
-  width: 100%; min-width: 0; height: 46px; padding: 0 14px; border: 0; border-radius: 12px;
-  background: var(--fill); outline: none; font-size: 16px; color: var(--text); font-weight: 400;
-}
-.fields textarea { height: 74px; padding: 12px 14px; resize: none; }
-.fields input:focus, .fields textarea:focus { box-shadow: inset 0 0 0 2px var(--text); }
-.actions { display: flex; gap: 10px; }
-.actions > * { flex: 1; height: 50px; border-radius: 999px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; text-decoration: none; color: inherit; background: var(--fill); }
-.actions .danger.armed { background: var(--danger); color: #fff; }
-.actions svg { width: 20px; height: 20px; }
+.round.armed { width: auto; padding: 0 16px; background: var(--danger); }
+.viewer .pill { align-self: center; margin: 14px 0 calc(16px + var(--sab)); height: 50px; padding: 0 22px; border-radius: 999px; display: flex; align-items: center; gap: 8px; background: #fff; color: #111; font-weight: 700; text-decoration: none; }
+.viewer .pill svg { width: 20px; height: 20px; }
+.viewer:not(:has(.pill)) .stage { padding-bottom: calc(16px + var(--sab)); }
 
 /* ---------- passcode ---------- */
 .login { position: fixed; inset: 0; z-index: 90; background: var(--bg); display: grid; place-items: center; padding: 24px; }
@@ -130,10 +101,9 @@ main { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain
 
 @media (min-width: 900px) {
   .title { padding: 32px 18px 4px; font-size: 34px; }
-  .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
-  .card .pic img { transition: opacity .3s, transform .35s cubic-bezier(.2,.8,.2,1); }
-  .card:hover .pic img.loaded { transform: scale(1.035); }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; padding: 0 18px; }
+  .tile { border-radius: 12px; }
+  .tile img { transition: opacity .3s, transform .35s cubic-bezier(.2,.8,.2,1); }
+  .tile:hover img.loaded { transform: scale(1.035); }
   .bar { left: 50%; right: auto; bottom: 24px; width: 360px; transform: translateX(-50%); padding: 7px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--text) 9%, transparent); box-shadow: 0 12px 40px rgba(0,0,0,.14); }
-  .sheet { left: 50%; right: auto; bottom: auto; top: 50%; width: 520px; transform: translate(-50%, -50%); border-radius: 22px; animation: fade .18s; padding-bottom: 18px; }
-  .sheet .grab { display: none; }
 }
