@@ -21,6 +21,10 @@
       <svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zM9 2 7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
       Add receipts
     </button>
+    <form class="line" id="line" autocomplete="off" hidden>
+      <input name="body" placeholder="Something you can claim…" enterkeyhint="send" maxlength="500" aria-label="Something you can claim">
+      <button aria-label="Add"><svg viewBox="0 0 24 24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg></button>
+    </form>
   </nav>
 
   <div class="toast" id="toast" hidden></div>

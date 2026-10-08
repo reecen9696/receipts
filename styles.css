@@ -29,6 +29,20 @@ main { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain
 .title { margin: 0; padding: calc(18px + var(--sat)) 18px 2px; font-size: 30px; font-weight: 800; letter-spacing: -.03em; }
 .sub { margin: 0 18px 8px; color: var(--muted); font-size: 15px; }
 
+/* Receipts | To claim */
+.tabs { display: flex; gap: 4px; margin: 6px 18px 10px; padding: 4px; border-radius: 999px; background: var(--fill); width: fit-content; }
+.tabs button { height: 36px; padding: 0 18px; border-radius: 999px; font-size: 14.5px; font-weight: 600; color: var(--muted); }
+.tabs [aria-selected=true] { background: var(--bg); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+
+/* to claim list */
+.claims { list-style: none; margin: 0; padding: 0 8px; }
+.claims li { display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 6px 4px 6px 10px; border-bottom: 1px solid color-mix(in srgb, var(--text) 8%, transparent); }
+.claims li span { flex: 1; min-width: 0; font-size: 16px; overflow-wrap: anywhere; }
+.claims li[data-id^=temp-] span { opacity: .5; }
+.claims li button { flex: none; height: 38px; min-width: 38px; padding: 0 8px; border-radius: 999px; display: grid; place-items: center; color: var(--muted); font-size: 13.5px; font-weight: 700; }
+.claims li button svg { width: 20px; height: 20px; }
+.claims li button.armed { background: var(--danger); color: #fff; padding: 0 14px; }
+
 /* photo grid, like the Photos app: square tiles, newest first */
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 10px; }
 .tile { position: relative; aspect-ratio: 1; overflow: hidden; background: var(--fill); display: grid; place-items: center; color: var(--muted); }
@@ -61,6 +75,11 @@ main { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain
 }
 .add { border: 0; font-family: inherit; }
 .add:active { transform: scale(.98); }
+
+.line { width: 100%; max-width: 560px; display: flex; gap: 8px; }
+.line input { flex: 1; min-width: 0; height: 52px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--fill); outline: none; font-size: 16px; color: var(--text); }
+.line input:focus { box-shadow: inset 0 0 0 2px var(--text); }
+.line button { flex: none; width: 52px; height: 52px; border-radius: 999px; display: grid; place-items: center; background: var(--text); color: var(--bg); }
 
 /* ---------- toast ---------- */
 .toast {
@@ -122,5 +141,6 @@ main { position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain
   .tile img { transition: opacity .3s, transform .35s cubic-bezier(.2,.8,.2,1); }
   .tile:hover img.loaded { transform: scale(1.035); }
   .menu { left: 50%; right: auto; bottom: 100px; width: 360px; transform: translateX(-50%); border-radius: 22px; animation: fade .18s; padding-bottom: 10px; box-shadow: 0 12px 40px rgba(0,0,0,.18); }
+  .bar:has(.line:not([hidden])) { width: 560px; }
   .bar { left: 50%; right: auto; bottom: 24px; width: 360px; transform: translateX(-50%); padding: 7px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--text) 9%, transparent); box-shadow: 0 12px 40px rgba(0,0,0,.14); }
 }

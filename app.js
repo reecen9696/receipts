@@ -30,7 +30,7 @@ const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/su
 const sb = createClient(config.supabaseUrl, config.supabaseAnonKey);
 const check = ({ data, error }) => { if (error) throw new Error(error.message); return data; };
 
-const state = { user: null, receipts: [], thumbs: new Map(), signedAt: 0, pending: 0 };
+const state = { user: null, receipts: [], claims: [], thumbs: new Map(), signedAt: 0, pending: 0, tab: location.hash === "#claims" ? "claims" : "receipts" };
 
 async function unlock(pin) {
   const { data, error } = await sb.auth.signInWithPassword({ email: "owner@house-moodboard.app", password: `house-moodboard-${pin}` });
@@ -39,7 +39,10 @@ async function unlock(pin) {
 }
 
 async function load() {
-  state.receipts = check(await sb.from("receipts").select("*").order("created_at", { ascending: false }));
+  [state.receipts, state.claims] = await Promise.all([
+    sb.from("receipts").select("*").order("created_at", { ascending: false }).then(check),
+    sb.from("claims").select("*").order("created_at", { ascending: true }).then(check),
+  ]);
   const paths = state.receipts.map((r) => r.thumb_path || (!isPdf(r) && r.file_path)).filter(Boolean);
   if (paths.length) for (const s of check(await sb.storage.from(BUCKET).createSignedUrls(paths, SIGN_FOR))) if (s.signedUrl) state.thumbs.set(s.path, s.signedUrl);
   state.signedAt = Date.now();
@@ -139,12 +142,54 @@ function tile(r) {
 }
 
 function render() {
+  const claims = state.tab === "claims";
+  $("#add").hidden = claims; $("#line").hidden = !claims;
+  const tabs = `<div class="tabs" role="tablist">
+    <button role="tab" data-tab="receipts" aria-selected="${!claims}">Receipts</button>
+    <button role="tab" data-tab="claims" aria-selected="${claims}">To claim</button>
+  </div>`;
+  $("#view").innerHTML = `<h1 class="title">${claims ? "To claim" : "Receipts"}</h1>${tabs}${claims ? claimsView() : receiptsView()}`;
+}
+
+function receiptsView() {
   const n = state.receipts.length;
-  $("#view").innerHTML = `
-    <h1 class="title">Receipts</h1>
-    <p class="sub">${n ? `${n} saved` : "Snap a receipt to keep it"}</p>
+  return `<p class="sub">${n ? `${n} saved` : "Snap a receipt to keep it"}</p>
     ${!n && !state.pending ? `<div class="empty"><b>No receipts yet</b>Tap Add receipts to get started.</div>` : ""}
     <div class="grid">${`<div class="tile pending"></div>`.repeat(state.pending)}${state.receipts.map(tile).join("")}</div>`;
+}
+
+/* ---------------- to claim: one line per thing you remember ---------------- */
+
+function claimsView() {
+  if (!state.claims.length) return `<div class="empty"><b>Nothing yet</b>Write down anything you remember you can claim, one line at a time.</div>`;
+  return `<ul class="claims">${state.claims.map((c) => `<li data-id="${c.id}"><span>${esc(c.body)}</span><button data-act="del" aria-label="Delete">${ICON.close}</button></li>`).join("")}</ul>`;
+}
+
+async function addClaim(body) {
+  const temp = { id: `temp-${crypto.randomUUID()}`, body };
+  state.claims.push(temp);
+  render();
+  $("#main").scrollTo({ top: $("#main").scrollHeight, behavior: "smooth" });
+  try {
+    Object.assign(temp, check(await sb.from("claims").insert({ body }).select().single()));
+    render();
+  } catch (e) {
+    state.claims = state.claims.filter((c) => c !== temp); render();
+    $("#line").body.value = body; // give the text back so nothing is lost
+    toast(`Couldn't save: ${e.message}`);
+  }
+}
+
+async function deleteClaim(btn) {
+  if (!btn.classList.contains("armed")) {
+    document.querySelectorAll(".claims .armed").forEach((b) => { b.classList.remove("armed"); b.innerHTML = ICON.close; });
+    btn.classList.add("armed"); btn.textContent = "Delete"; return;
+  }
+  const c = state.claims.find((x) => x.id === btn.closest("li").dataset.id);
+  if (!c || c.id.startsWith("temp-")) return;
+  state.claims = state.claims.filter((x) => x !== c); render(); haptic("success");
+  try { check(await sb.from("claims").delete().eq("id", c.id)); }
+  catch (e) { state.claims.push(c); state.claims.sort((a, b) => a.created_at.localeCompare(b.created_at)); render(); toast(`Couldn't delete: ${e.message}`); }
 }
 
 /* ---------------- viewer ---------------- */
@@ -242,7 +287,20 @@ function bindEvents() {
     input.onclick = () => menu(false);
     input.onchange = () => { const files = [...input.files]; input.value = ""; if (files.length) addFiles(files); };
   }
-  $("#view").onclick = (e) => { const t = e.target.closest(".tile:not(.pending)"); if (t) openReceipt(t.dataset.id); };
+  $("#view").onclick = (e) => {
+    const tab = e.target.closest("[data-tab]");
+    if (tab) { state.tab = tab.dataset.tab; history.replaceState(null, "", state.tab === "claims" ? "#claims" : location.pathname); render(); return; }
+    const del = e.target.closest("[data-act=del]");
+    if (del) return deleteClaim(del);
+    const t = e.target.closest(".tile:not(.pending)"); if (t) openReceipt(t.dataset.id);
+  };
+  $("#line").onsubmit = (e) => {
+    e.preventDefault();
+    const input = e.target.body, body = input.value.trim();
+    if (!body) return;
+    input.value = ""; input.focus(); // keyboard stays up for the next line
+    addClaim(body);
+  };
   addEventListener("keydown", (e) => { if (e.key === "Escape") { closeViewer(); menu(false); } });
   // signed links last an hour; coming back to the app later gets fresh ones
   document.addEventListener("visibilitychange", () => {
