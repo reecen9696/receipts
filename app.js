@@ -164,15 +164,13 @@ function expensesView() {
 
 function receiptsView() {
   const n = state.receipts.length;
-  return `<p class="sub">${n ? `${n} saved` : "Snap a receipt to keep it"}</p>
-    ${!n && !state.pending ? `<div class="empty"><b>No receipts yet</b>Tap Add receipts to get started.</div>` : ""}
+  return `${!n && !state.pending ? `<div class="empty"><b>No receipts yet</b>Tap Add receipts to get started.</div>` : ""}
     <div class="grid">${`<div class="tile pending"></div>`.repeat(state.pending)}${state.receipts.map(tile).join("")}</div>`;
 }
 
 /* ---------------- to claim: one line per thing you remember ---------------- */
 
 function claimsView() {
-  if (!state.claims.length) return `<div class="empty"><b>Nothing yet</b>Write down anything you remember you can claim, one line at a time.</div>`;
   return `<ul class="claims">${state.claims.map((c) => `<li data-id="${c.id}"><span>${esc(c.body)}</span><button data-act="del" aria-label="Delete">${ICON.close}</button></li>`).join("")}</ul>`;
 }
 
