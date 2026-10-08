@@ -154,10 +154,9 @@ function render() {
 
 function expensesView() {
   return EXPENSES.map((g) => `
-    <h2 class="group">${esc(g.group)}</h2>
     <div class="acc">${g.sections.map((sec) => `
       <details>
-        <summary><span>${esc(sec.title)}</span><small>${sec.items.length}</small></summary>
+        <summary><i style="background:${sec.color}">${svg(sec.icon)}</i><span>${esc(sec.title)}</span></summary>
         <ul>${sec.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>
       </details>`).join("")}
     </div>`).join("");

@@ -1,7 +1,7 @@
-// Quick reference: what can be claimed, grouped. Item names only; the rates and percentages live with the accountant.
+// Quick reference: what can be claimed, one drop-down per category (icon: Material icon path, color: its badge). Item names only; the rates and percentages live with the accountant.
 export const EXPENSES = [
   { group: "Nimo Solutions (company)", sections: [
-    { title: "Software and online services", items: [
+    { title: "Software and online services", color: "#5856D6", icon: "M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z", items: [
       "AI tools (Claude, ChatGPT, Cursor)",
       "Design tools (Figma, Framer, Lottielab, Mobbin, Adobe, Webflow)",
       "Dev and hosting (Vercel, Alchemy, AWS, GitHub, databases, APIs)",
@@ -13,7 +13,7 @@ export const EXPENSES = [
       "Bookkeeping and payroll software (Xero, MYOB)",
       "Summ / crypto tax software",
     ] },
-    { title: "Equipment and tech", items: [
+    { title: "Equipment and tech", color: "#007AFF", icon: "M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z", items: [
       "Laptop, phone, tablet",
       "Monitors, keyboard, mouse, dock, cables, chargers, hard drives",
       "Headphones, webcam, mic, lighting",
@@ -23,7 +23,7 @@ export const EXPENSES = [
       "Repairs to work equipment",
       "Insurance on business equipment",
     ] },
-    { title: "Home and office", items: [
+    { title: "Home and office", color: "#34C759", icon: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z", items: [
       "Desk, chair, standing desk, shelving",
       "Office decor, whiteboards, storage",
       "Air purifier, heater or fan for the office",
@@ -32,7 +32,7 @@ export const EXPENSES = [
       "Postage and couriers",
       "Business phone number, second SIM, travel eSIM",
     ] },
-    { title: "Crypto", items: [
+    { title: "Crypto", color: "#FF9500", icon: "M15 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zM3 12c0-2.61 1.67-4.83 4-5.65V4.26C3.55 5.15 1 8.27 1 12s2.55 6.85 6 7.74v-2.09c-2.33-.82-4-3.04-4-5.65z", items: [
       "Gas and transaction fees",
       "Exchange, on-ramp and off-ramp fees",
       "Node, RPC and validator infrastructure",
@@ -40,14 +40,14 @@ export const EXPENSES = [
       "Foreign exchange losses on USD payments",
       "Capital losses, including lost or stolen crypto",
     ] },
-    { title: "Product development", items: [
+    { title: "Product development", color: "#FF2D55", icon: "M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z", items: [
       "In-house software development (Propia, GoTendr tools)",
       "User testing, research tools, participant incentives",
       "Game engine assets and plugins",
       "Trademarks and IP registration",
       "R&D Tax Incentive (eligible R&D spend over $20k)",
     ] },
-    { title: "Professional and admin", items: [
+    { title: "Professional and admin", color: "#8E8E93", icon: "M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z", items: [
       "Accountant, tax agent, BAS preparation",
       "Legal (contracts, IP, structuring)",
       "ASIC annual fee, business name fees",
@@ -58,7 +58,7 @@ export const EXPENSES = [
       "Debt collection costs",
       "Bad debts written off",
     ] },
-    { title: "People", items: [
+    { title: "People", color: "#00C7BE", icon: "M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z", items: [
       "Contractors and freelancers",
       "Bookkeeper or virtual assistant",
       "Your wages through payroll",
@@ -67,20 +67,20 @@ export const EXPENSES = [
       "Workers comp",
       "Recruitment and Upwork / Fiverr fees",
     ] },
-    { title: "Marketing and growth", items: [
+    { title: "Marketing and growth", color: "#FF3B30", icon: "M18 11v2h4v-2h-4zm-2 6.61c.96.71 2.21 1.65 3.2 2.39.4-.53.8-1.07 1.2-1.6-.99-.74-2.24-1.68-3.2-2.4-.4.54-.8 1.08-1.2 1.61zM20.4 5.6c-.4-.53-.8-1.07-1.2-1.6-.99.74-2.24 1.68-3.2 2.4.4.53.8 1.07 1.2 1.6.96-.72 2.21-1.65 3.2-2.4zM4 9c-1.1 0-2 .9-2 2v2c0 1.1.9 2 2 2h1v4h2v-4h1l5 3V6L8 9H4zm11.5 3c0-1.33-.58-2.53-1.5-3.35v6.69c.92-.81 1.5-2.01 1.5-3.34z", items: [
       "Ads (Google, Meta, LinkedIn)",
       "Website, SEO tools",
       "Business cards, printing, merch",
       "Video and photography",
       "LinkedIn Premium, directory listings",
     ] },
-    { title: "Learning", items: [
+    { title: "Learning", color: "#AF52DE", icon: "M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3 1 9l11 6 9-4.91V17h2V9L12 3z", items: [
       "Courses, bootcamps, certifications",
       "Books, newsletters, paid Substacks",
       "Conference and event tickets",
       "Industry memberships",
     ] },
-    { title: "Travel and transport", items: [
+    { title: "Travel and transport", color: "#32ADE6", icon: "M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z", items: [
       "Car trips to clients and sites (not commuting)",
       "Parking and tolls on business trips",
       "Uber / Grab to meetings and events",
@@ -88,20 +88,16 @@ export const EXPENSES = [
       "Event-day transport",
     ] },
   ] },
-  { group: "Personal return", sections: [
-    { title: "Home and work", items: [
+  { group: "Personal", sections: [
+    { title: "Personal return", color: "#1C1C1E", icon: "M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z", items: [
       "Working from home (electricity, gas, internet, phone)",
       "Home office furniture and equipment you paid for",
       "Cleaning a dedicated home office",
       "Car trips to clients and sites (if the company didn't reimburse)",
       "Shuffle work expenses not reimbursed",
-    ] },
-    { title: "Insurance, super and fees", items: [
       "Income protection insurance (outside super)",
       "Personal super contributions (lodge a notice of intent)",
       "Tax agent fees for your personal return",
-    ] },
-    { title: "Other", items: [
       "Donations to registered charities ($2+)",
       "Crypto capital losses",
     ] },
