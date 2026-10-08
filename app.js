@@ -162,7 +162,7 @@ async function openReceipt(id) {
       : `<a class="preview" target="_blank" rel="noopener"><img src="${esc(thumb || "")}" alt="Receipt"></a>`}
     <form class="fields" autocomplete="off">
       <label class="wide">Store<input name="merchant" value="${esc(r.merchant)}" placeholder="e.g. Officeworks"></label>
-      <label>Amount<input name="amount" inputmode="decimal" value="${r.amount ?? ""}" placeholder="$0.00"></label>
+      <label>Amount<input name="amount" inputmode="decimal" value="${r.amount != null ? Number(r.amount).toFixed(2) : ""}" placeholder="$0.00"></label>
       <label>Date<input name="receipt_date" type="date" value="${dayOf(r)}"></label>
       <label class="wide">Note<textarea name="note" placeholder="What it was for">${esc(r.note)}</textarea></label>
     </form>
